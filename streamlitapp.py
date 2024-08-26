@@ -5,7 +5,7 @@ import streamlit as st
 # Load model
 model = pickle.load(open("model.pkl", "rb"))
 
-# Mapping dictionary
+# Mapping dictionaries
 weather_conditions = {
     0: 'Smoke',
     1: 'Clear',
@@ -45,8 +45,25 @@ weather_conditions = {
     35: 'Rain Showers'
 }
 
-# Invert the dictionary for easy lookup
-weather_conditions_inv = {v: k for k, v in weather_conditions.items()}
+wind_directions = {
+    'North': 1,
+    'West': 4,
+    'WNW': 4,
+    'East': 3,
+    'NW': 1,
+    'WSW': 4,
+    'ESE': 3,
+    'ENE': 3,
+    'SE': 3,
+    'SW': 2,
+    'NNW': 1,
+    'NE': 3,
+    'SSE': 2,
+    'SSW': 2,
+    'NNE': 1,
+    'South': 2,
+    'Variable': 5
+}
 
 # Streamlit app
 def main():
@@ -73,9 +90,18 @@ def main():
         thunder = st.checkbox("Thunder", value=False)
         fog = st.checkbox("Fog", value=False)
         
+        # Dropdown for wind direction
+        wind_direction = st.selectbox(
+            "Wind Direction",
+            list(wind_directions.keys())
+        )
+        
         # Convert checkbox inputs to 0 or 1
         thunder = int(thunder)
         fog = int(fog)
+        
+        # Convert selected wind direction to corresponding integer value
+        wind_direction_value = wind_directions[wind_direction]
 
         submit_button = st.form_submit_button("Predict")
 
@@ -89,8 +115,8 @@ def main():
             pressure,
             temperature,
             thunder,
-            0,  # Assuming 'Vism' and 'Wind direction' are not used; set to 0
-            0,  # Assuming 'Wind Speed' is not used; set to 0
+            wind_direction_value,
+            0  # Assuming 'Wind Speed' is not used; set to 0
         ]
         
         features = [np.array(input_features)]
