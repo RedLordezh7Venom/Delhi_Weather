@@ -5,40 +5,92 @@ import streamlit as st
 # Load model
 model = pickle.load(open("model.pkl", "rb"))
 
+# Mapping dictionary
+weather_conditions = {
+    0: 'Smoke',
+    1: 'Clear',
+    2: 'Haze',
+    3: 'Scattered Clouds',
+    4: 'Shallow Fog',
+    5: 'Mostly Cloudy',
+    6: 'Fog',
+    7: 'Partly Cloudy',
+    8: 'Patches of Fog',
+    9: 'Thunderstorms and Rain',
+    10: 'Overcast',
+    11: 'Rain',
+    12: 'Light Rain',
+    13: 'Drizzle',
+    14: 'Mist',
+    15: 'Light Drizzle',
+    16: 'Thunderstorm',
+    17: 'Light Thunderstorms and Rain',
+    18: 'Light Thunderstorm',
+    19: 'Squalls',
+    20: 'Heavy Rain',
+    21: 'Light Haze',
+    22: 'Widespread Dust',
+    23: 'Funnel Cloud',
+    24: 'Heavy Thunderstorms and Rain',
+    25: 'Heavy Thunderstorms with Hail',
+    26: 'Light Rain Showers',
+    27: 'Thunderstorms with Hail',
+    28: 'Partial Fog',
+    29: 'Heavy Fog',
+    30: 'Light Fog',
+    31: 'Blowing Sand',
+    32: 'Sandstorm',
+    33: 'Light Hail Showers',
+    34: 'Light Sandstorm',
+    35: 'Rain Showers'
+}
+
+# Invert the dictionary for easy lookup
+weather_conditions_inv = {v: k for k, v in weather_conditions.items()}
+
 # Streamlit app
 def main():
     st.title("Weather Prediction App")
-    
+
     # Form to input data
     with st.form(key='prediction_form'):
         st.header("Enter the weather details:")
+
+        # Dropdown for weather condition
+        weather_condition = st.selectbox(
+            "Weather Condition", 
+            list(weather_conditions.keys()), 
+            format_func=lambda x: weather_conditions[x]
+        )
         
-        weather_condition = st.text_input("Weather Condition")
-        dew = st.text_input("Dew")
-        fog = st.text_input("Fog")
-        humidity = st.text_input("Humidity")
-        pressure = st.text_input("Pressure")
-        temperature = st.text_input("Temperature")
-        thunder = st.text_input("Thunder")
-        vism = st.text_input("Vism")
-        wind_direction = st.text_input("Wind direction")
-        wind_speed = st.text_input("Wind Speed")
+        # Sliders for numerical inputs
+        temperature = st.slider("Temperature (°C)", -10, 50, 0)
+        pressure = st.slider("Pressure (hPa)", 900, 1050, 1013)
+        humidity = st.slider("Humidity (%)", 0, 100, 50)
+        dew = st.slider("Dew Point (°C)", -10, 30, 0)
         
+        # Checkboxes for binary inputs
+        thunder = st.checkbox("Thunder", value=False)
+        fog = st.checkbox("Fog", value=False)
+        
+        # Convert checkbox inputs to 0 or 1
+        thunder = int(thunder)
+        fog = int(fog)
+
         submit_button = st.form_submit_button("Predict")
-    
+
     if submit_button:
         # Convert inputs to numerical values
         input_features = [
-            int(weather_condition),
-            int(dew),
-            int(fog),
-            int(humidity),
-            int(pressure),
-            int(temperature),
-            int(thunder),
-            int(vism),
-            int(wind_direction),
-            int(wind_speed)
+            weather_condition,
+            dew,
+            fog,
+            humidity,
+            pressure,
+            temperature,
+            thunder,
+            0,  # Assuming 'Vism' and 'Wind direction' are not used; set to 0
+            0,  # Assuming 'Wind Speed' is not used; set to 0
         ]
         
         features = [np.array(input_features)]
