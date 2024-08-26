@@ -4,7 +4,6 @@
 * Run app.py
 
 ### Predictions : 
-* Go to http://127.0.0.1:5000/
-* https://redlordezh7venom.github.io/Delhi_Weather/ (github Pages, preview only (Model doesn't work on github.io))
+* [Visit this site](https://delhi-weather-rain-predictor.streamlit.app/)
 * Input the weather features
 
