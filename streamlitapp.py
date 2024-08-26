@@ -31,7 +31,7 @@ def main():
         pressure = st.slider("Pressure (hPa)", 900, 1050, 1013)
         humidity = st.slider("Humidity (%)", 0, 100, 50)
         dew = st.slider("Dew Point (°C)", -10, 30, 0)
-        vism = st.text_input("Visibility (in metres)")
+        vism = st.text_input("Visibility (in km)")
         
         # Checkboxes for binary inputs
         thunder = st.checkbox("Thunder", value=False)
